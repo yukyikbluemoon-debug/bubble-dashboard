@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Seismograph — Bubble Risk Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">◈</span>
+    <div>
+      <h1>MARKET SEISMOGRAPH</h1>
+      <p class="subtitle">Bubble Risk Monitor · <span id="marketLabel">—</span></p>
+    </div>
+  </div>
+  <div class="updated">
+    <span class="updated-label">LAST READING</span>
+    <span id="lastUpdated" class="updated-value">—</span>
+  </div>
+</header>
+
+<main>
+  <section class="gauge-panel">
+    <div class="gauge-wrap">
+      <svg id="gaugeSvg" viewBox="0 0 300 175" class="gauge-svg">
+        <!-- arc track segments drawn by JS -->
+        <g id="gaugeArc"></g>
+        <line id="gaugeNeedle" x1="150" y1="150" x2="150" y2="45" class="needle"/>
+        <circle cx="150" cy="150" r="7" class="needle-hub"/>
+      </svg>
+      <div class="gauge-readout">
+        <span id="gaugeScore" class="gauge-score">--</span>
+        <span class="gauge-max">/100</span>
+      </div>
+      <div class="gauge-ticks">
+        <span>Stealth</span><span>Awareness</span><span>Mania</span><span>Euphoria</span><span>Peak</span>
+      </div>
+    </div>
+    <div class="gauge-verdict">
+      <p id="verdictPhase" class="verdict-phase">—</p>
+      <p id="verdictText" class="verdict-text">กำลังโหลดข้อมูล…</p>
+    </div>
+  </section>
+
+  <section class="indicators-grid" id="indicatorsGrid">
+    <!-- cards injected by JS -->
+  </section>
+
+  <section class="timeline-panel">
+    <div class="panel-head">
+      <h2>ประวัติคะแนนความเสี่ยง เทียบจุดพีคในอดีต</h2>
+      <p class="panel-sub">Composite Bubble Risk Score — เส้นประคือจุดที่ฟองสบู่เคยแตกมาก่อน</p>
+    </div>
+    <canvas id="timelineChart" height="90"></canvas>
+  </section>
+
+  <footer class="disclaimer">
+    <p>ข้อมูลนี้เป็นเครื่องมือประกอบการวิเคราะห์ส่วนตัว ไม่ใช่คำแนะนำการลงทุน อัปเดตข้อมูลด้วยมือ ดูวิธีใน <code>README.md</code></p>
+  </footer>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

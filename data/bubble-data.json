@@ -1,0 +1,80 @@
+{
+  "lastUpdated": "2026-08-23",
+  "market": "S&P 500 / US Equities",
+  "indicators": {
+    "cape": {
+      "label": "Shiller CAPE",
+      "value": 41.2,
+      "unit": "x",
+      "history": [17.0, 44.2, 27.3, 24.8, 38.0, 41.2],
+      "historyLabels": ["1990", "1999", "2007", "2015", "2021", "2026"],
+      "scaleMin": 5,
+      "scaleMid": 25,
+      "scaleMax": 45,
+      "riskScore": 92,
+      "note": "Percentile 98.9 นับตั้งแต่ปี 1881 สูงเป็นอันดับ 2 รองจาก ธ.ค. 1999"
+    },
+    "yieldCurve": {
+      "label": "Yield Curve (10Y-2Y)",
+      "value": 0.35,
+      "unit": "%",
+      "history": [1.2, -0.5, 0.9, 1.5, -0.6, 0.35],
+      "historyLabels": ["1990", "1999", "2007", "2015", "2021", "2026"],
+      "scaleMin": -1.0,
+      "scaleMid": 0.5,
+      "scaleMax": 2.5,
+      "riskScore": 45,
+      "note": "ค่าติดลบ = inverted = สัญญาณเตือนถดถอย ตอนนี้กลับมาเป็นบวกเล็กน้อย"
+    },
+    "vix": {
+      "label": "VIX (ความผันผวน)",
+      "value": 14.5,
+      "unit": "",
+      "history": [20, 24, 22, 16, 19, 14.5],
+      "historyLabels": ["1990", "1999", "2007", "2015", "2021", "2026"],
+      "scaleMin": 10,
+      "scaleMid": 20,
+      "scaleMax": 40,
+      "riskScore": 70,
+      "note": "VIX ต่ำผิดปกติมักเป็น 'ความสงบก่อนพายุ' ไม่ใช่สัญญาณปลอดภัย"
+    },
+    "marginDebt": {
+      "label": "Margin Debt Growth (YoY)",
+      "value": 28,
+      "unit": "%",
+      "history": [15, 60, 30, 10, 45, 28],
+      "historyLabels": ["1990", "1999", "2007", "2015", "2021", "2026"],
+      "scaleMin": 0,
+      "scaleMid": 25,
+      "scaleMax": 60,
+      "riskScore": 65,
+      "note": "การเติบโตของหนี้มาร์จิ้นสูง = เก็งกำไรด้วยเลเวอเรจสูง"
+    },
+    "sentiment": {
+      "label": "AAII Bull-Bear Spread",
+      "value": 32,
+      "unit": "%",
+      "history": [10, 45, 15, 5, 38, 32],
+      "historyLabels": ["1990", "1999", "2007", "2015", "2021", "2026"],
+      "scaleMin": -20,
+      "scaleMid": 20,
+      "scaleMax": 50,
+      "riskScore": 75,
+      "note": "สัดส่วนนักลงทุนที่มองบวกมากกว่าลบ ยิ่งสูงยิ่งเสี่ยงต่อ euphoria"
+    }
+  },
+  "historicalComposite": [
+    { "date": "1997", "score": 55, "label": null },
+    { "date": "1999", "score": 88, "label": "Dot-com Peak" },
+    { "date": "2001", "score": 30, "label": null },
+    { "date": "2005", "score": 50, "label": null },
+    { "date": "2007", "score": 72, "label": "Pre-GFC Peak" },
+    { "date": "2009", "score": 20, "label": null },
+    { "date": "2015", "score": 45, "label": null },
+    { "date": "2019", "score": 60, "label": null },
+    { "date": "2021", "score": 80, "label": "Post-COVID Peak" },
+    { "date": "2022", "score": 40, "label": null },
+    { "date": "2024", "score": 65, "label": null },
+    { "date": "2026", "score": 78, "label": "ปัจจุบัน" }
+  ]
+}
