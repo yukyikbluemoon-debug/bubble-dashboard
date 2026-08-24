@@ -8,6 +8,15 @@ const PHASES = [
 
 const GAUGE_COLORS = ["#3FA796", "#7CAE6E", "#E8C33D", "#E8A33D", "#D64545"];
 
+const MARKETS = {
+  us: { file: "data/bubble-data-us.json", label: "US" },
+  th: { file: "data/bubble-data-th.json", label: "TH" },
+};
+
+const STALE_DAYS_THRESHOLD = 40;
+
+let timelineChartInstance = null;
+
 function polarToCartesian(cx, cy, r, angleDeg) {
   const rad = (angleDeg * Math.PI) / 180;
   return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
@@ -17,12 +26,12 @@ function describeArc(cx, cy, r, startAngle, endAngle) {
   const start = polarToCartesian(cx, cy, r, startAngle);
   const end = polarToCartesian(cx, cy, r, endAngle);
   const largeArc = Math.abs(startAngle - endAngle) > 180 ? 1 : 0;
-  // sweep flag 0 draws the correct direction for our top-half, angle-decreasing convention
   return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 0 ${end.x} ${end.y}`;
 }
 
 function drawGaugeArc() {
   const g = document.getElementById("gaugeArc");
+  g.innerHTML = "";
   const segCount = GAUGE_COLORS.length;
   const span = 180 / segCount;
   for (let i = 0; i < segCount; i++) {
@@ -41,17 +50,19 @@ function drawGaugeArc() {
 
 function setNeedle(score) {
   const clamped = Math.max(0, Math.min(100, score));
-  const rotation = clamped * 1.8 - 90; // -90deg (left) at 0, +90deg (right) at 100
+  const rotation = clamped * 1.8 - 90;
   document.getElementById("gaugeNeedle").style.transform = `rotate(${rotation}deg)`;
 }
 
 function riskClass(riskScore) {
+  if (riskScore === null || riskScore === undefined) return "risk-unknown";
   if (riskScore >= 70) return "risk-crit";
   if (riskScore >= 45) return "risk-warn";
   return "";
 }
 
 function riskLabel(riskScore) {
+  if (riskScore === null || riskScore === undefined) return "ยังไม่มีข้อมูล";
   if (riskScore >= 70) return "เสี่ยงสูง";
   if (riskScore >= 45) return "เฝ้าระวัง";
   return "ปกติ";
@@ -60,25 +71,54 @@ function riskLabel(riskScore) {
 function renderIndicators(indicators) {
   const grid = document.getElementById("indicatorsGrid");
   grid.innerHTML = "";
-  Object.values(indicators).forEach((ind) => {
+  Object.values(indicators).forEach((ind, idx) => {
     const card = document.createElement("div");
     card.className = `ind-card ${riskClass(ind.riskScore)}`;
+    const valueText = ind.value === null || ind.value === undefined ? "—" : ind.value;
+    const sourceLink = ind.sourceUrl
+      ? `<a class="ind-source" href="${ind.sourceUrl}" target="_blank" rel="noopener">แหล่งข้อมูล ↗</a>`
+      : "";
     card.innerHTML = `
-      <div class="ind-label">${ind.label}</div>
-      <div class="ind-value">${ind.value}<span class="unit">${ind.unit}</span></div>
+      <div class="ind-label-row">
+        <span class="ind-label">${ind.label}</span>
+        <button class="ind-info-btn" data-idx="${idx}" aria-label="อธิบายตัวชี้วัดนี้">?</button>
+      </div>
+      <div class="ind-value">${valueText}<span class="unit">${ind.unit || ""}</span></div>
+      <div class="ind-explainer" id="explainer-${idx}" hidden>${ind.explainer || "ยังไม่มีคำอธิบาย"}</div>
       <div class="ind-note">${ind.note}</div>
-      <div class="ind-risk">RISK SCORE ${ind.riskScore}/100 · ${riskLabel(ind.riskScore)}</div>
+      <div class="ind-footer">
+        <span class="ind-risk">RISK ${ind.riskScore ?? "—"}/100 · ${riskLabel(ind.riskScore)}</span>
+        ${sourceLink}
+      </div>
+      <div class="ind-asof">ข้อมูล ณ ${ind.asOf || "ไม่ระบุ"}</div>
     `;
     grid.appendChild(card);
+  });
+
+  grid.querySelectorAll(".ind-info-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = document.getElementById(`explainer-${btn.dataset.idx}`);
+      target.hidden = !target.hidden;
+      btn.classList.toggle("active", !target.hidden);
+    });
   });
 }
 
 function computeComposite(indicators) {
-  const scores = Object.values(indicators).map((i) => i.riskScore);
+  const scores = Object.values(indicators)
+    .map((i) => i.riskScore)
+    .filter((s) => s !== null && s !== undefined);
+  if (scores.length === 0) return null;
   return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
 }
 
 function renderVerdict(score) {
+  if (score === null) {
+    document.getElementById("verdictPhase").textContent = "ไม่มีข้อมูลพอ";
+    document.getElementById("verdictText").textContent =
+      "กรอกตัวชี้วัดอย่างน้อย 1 ตัวใน data.json เพื่อคำนวณคะแนน";
+    return;
+  }
   const phase = PHASES.find((p) => score <= p.max) || PHASES[PHASES.length - 1];
   document.getElementById("verdictPhase").textContent = phase.name;
   document.getElementById("verdictPhase").style.color =
@@ -86,15 +126,27 @@ function renderVerdict(score) {
   document.getElementById("verdictText").textContent = phase.text;
 }
 
+function renderStaleBanner(lastUpdated) {
+  const banner = document.getElementById("staleBanner");
+  const updatedDate = new Date(lastUpdated);
+  const daysOld = Math.floor((Date.now() - updatedDate.getTime()) / 86400000);
+  if (isNaN(daysOld) || daysOld < STALE_DAYS_THRESHOLD) {
+    banner.hidden = true;
+    return;
+  }
+  banner.hidden = false;
+  banner.textContent = `⚠ ข้อมูลนี้อัปเดตล่าสุดเมื่อ ${daysOld} วันก่อน (${lastUpdated}) อาจไม่ตรงกับสถานการณ์ปัจจุบันแล้ว ควรอัปเดต data.json`;
+}
+
 function renderTimeline(historicalComposite) {
   const ctx = document.getElementById("timelineChart");
+  if (timelineChartInstance) {
+    timelineChartInstance.destroy();
+  }
   const labels = historicalComposite.map((d) => d.date);
   const scores = historicalComposite.map((d) => d.score);
-  const peakPoints = historicalComposite
-    .map((d, idx) => (d.label ? { idx, label: d.label, score: d.score } : null))
-    .filter(Boolean);
 
-  new Chart(ctx, {
+  timelineChartInstance = new Chart(ctx, {
     type: "line",
     data: {
       labels,
@@ -120,8 +172,8 @@ function renderTimeline(historicalComposite) {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            afterLabel: (ctx) => {
-              const d = historicalComposite[ctx.dataIndex];
+            afterLabel: (ctx2) => {
+              const d = historicalComposite[ctx2.dataIndex];
               return d.label ? `⚠ ${d.label}` : "";
             },
           },
@@ -141,31 +193,44 @@ function renderTimeline(historicalComposite) {
       },
     },
   });
-
-  // annotate peak labels above their points using simple DOM-free approach:
-  // (kept minimal — tooltip carries the label; peak points are visually distinct in red)
 }
 
-async function init() {
+function setActiveMarketButton(marketKey) {
+  document.querySelectorAll(".market-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.market === marketKey);
+  });
+}
+
+async function loadMarket(marketKey) {
+  const config = MARKETS[marketKey];
+  setActiveMarketButton(marketKey);
   drawGaugeArc();
   try {
-    const res = await fetch("data/bubble-data.json", { cache: "no-store" });
+    const res = await fetch(`${config.file}?t=${Date.now()}`, { cache: "no-store" });
     const data = await res.json();
 
     document.getElementById("marketLabel").textContent = data.market;
     document.getElementById("lastUpdated").textContent = data.lastUpdated;
+    renderStaleBanner(data.lastUpdated);
 
     const composite = computeComposite(data.indicators);
-    document.getElementById("gaugeScore").textContent = composite;
-    setNeedle(composite);
+    document.getElementById("gaugeScore").textContent = composite === null ? "--" : composite;
+    setNeedle(composite === null ? 0 : composite);
     renderVerdict(composite);
     renderIndicators(data.indicators);
     renderTimeline(data.historicalComposite);
   } catch (err) {
     document.getElementById("verdictText").textContent =
-      "โหลดข้อมูลไม่สำเร็จ — ตรวจสอบว่ามีไฟล์ data/bubble-data.json และรันผ่าน local server (ไม่ใช่เปิดไฟล์ตรงๆ)";
+      "โหลดข้อมูลไม่สำเร็จ — ตรวจสอบว่ามีไฟล์ JSON และรันผ่าน local server (ไม่ใช่เปิดไฟล์ตรงๆ)";
     console.error(err);
   }
+}
+
+function init() {
+  document.querySelectorAll(".market-btn").forEach((btn) => {
+    btn.addEventListener("click", () => loadMarket(btn.dataset.market));
+  });
+  loadMarket("us");
 }
 
 init();

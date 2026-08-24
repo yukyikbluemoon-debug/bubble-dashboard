@@ -22,11 +22,19 @@
       <p class="subtitle">Bubble Risk Monitor · <span id="marketLabel">—</span></p>
     </div>
   </div>
-  <div class="updated">
-    <span class="updated-label">LAST READING</span>
-    <span id="lastUpdated" class="updated-value">—</span>
+  <div class="header-right">
+    <div class="market-switch">
+      <button class="market-btn" data-market="us">🇺🇸 US</button>
+      <button class="market-btn" data-market="th">🇹🇭 SET</button>
+    </div>
+    <div class="updated">
+      <span class="updated-label">LAST READING</span>
+      <span id="lastUpdated" class="updated-value">—</span>
+    </div>
   </div>
 </header>
+
+<div id="staleBanner" class="stale-banner" hidden></div>
 
 <main>
   <section class="gauge-panel">
@@ -55,10 +63,20 @@
     <!-- cards injected by JS -->
   </section>
 
+  <section class="guide-panel">
+    <button class="guide-toggle" id="guideToggle">📖 ยังไม่เข้าใจกราฟนี้? กดอ่านคำอธิบายฉบับมือใหม่</button>
+    <div class="guide-content" id="guideContent" hidden>
+      <p><strong>เกจด้านบน</strong> คือคะแนนรวม 0-100 ยิ่งเข็มขยับไปทางขวา (แดง) ยิ่งเสี่ยง คำนวณจากค่าเฉลี่ยของตัวชี้วัดด้านล่างทั้งหมด</p>
+      <p><strong>การ์ดแต่ละใบ</strong> คือตัวชี้วัด 1 ตัว กดปุ่ม <code>?</code> มุมขวาบนของการ์ดเพื่ออ่านคำอธิบายง่ายๆ ว่าตัวเลขนี้คืออะไร</p>
+      <p><strong>กราฟไทม์ไลน์ด้านล่าง</strong> เทียบคะแนนตอนนี้กับจุดพีคในอดีต จุดสีแดงคือช่วงที่ฟองสบู่เคยแตกจริง — <em>หมายเหตุ: จุดปีเก่าๆ (ก่อน 2026) เป็นค่าประมาณเชิงแนวคิดเพื่อให้เห็นภาพรวม ไม่ได้คำนวณจากสูตรเดียวกับคะแนนปัจจุบัน</em></p>
+      <p>ไม่มีตัวเลขใดบอกอนาคตได้แม่นยำ 100% เครื่องมือนี้ช่วยให้เห็นภาพรวมเร็วขึ้นเท่านั้น</p>
+    </div>
+  </section>
+
   <section class="timeline-panel">
     <div class="panel-head">
       <h2>ประวัติคะแนนความเสี่ยง เทียบจุดพีคในอดีต</h2>
-      <p class="panel-sub">Composite Bubble Risk Score — เส้นประคือจุดที่ฟองสบู่เคยแตกมาก่อน</p>
+      <p class="panel-sub">Composite Bubble Risk Score — เส้นประคือจุดที่ฟองสบู่เคยแตกมาก่อน (จุดปีเก่าเป็นค่าประมาณเชิงภาพประกอบ)</p>
     </div>
     <canvas id="timelineChart" height="90"></canvas>
   </section>
@@ -68,6 +86,12 @@
   </footer>
 </main>
 
+<script>
+  document.getElementById("guideToggle").addEventListener("click", () => {
+    const content = document.getElementById("guideContent");
+    content.hidden = !content.hidden;
+  });
+</script>
 <script src="script.js"></script>
 </body>
 </html>

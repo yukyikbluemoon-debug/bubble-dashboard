@@ -1,0 +1,74 @@
+{
+  "lastUpdated": "2026-08-24",
+  "market": "SET Index / Thailand",
+  "indicators": {
+    "setPE": {
+      "label": "SET Forward P/E",
+      "value": 16.1,
+      "unit": "x",
+      "asOf": "มิ.ย. 2026",
+      "sourceUrl": "https://www.set.or.th",
+      "explainer": "เหมือน CAPE แต่เป็นเวอร์ชันง่ายกว่า วัดราคาหุ้นเทียบกับกำไรที่คาดการณ์ไว้ล่วงหน้า ยิ่งสูงยิ่งแพงเทียบกำไร",
+      "history": [14.5, 15.8, 16.5, 14.0, 17.2, 16.1],
+      "historyLabels": ["2015", "2018", "2019", "2022", "2023", "2026"],
+      "scaleMin": 8,
+      "scaleMid": 15,
+      "scaleMax": 22,
+      "riskScore": 58,
+      "note": "16.1x (มิ.ย. 2026) สูงกว่าค่าเฉลี่ยเอเชียที่ 13.2x เล็กน้อย ส่วน Historical P/E 16.8x ต่ำกว่าค่าเฉลี่ยเอเชียที่ 17.3x — ถือว่าตึงเล็กน้อยไม่ใช่ฟองสบู่ชัดเจน"
+    },
+    "foreignFlow": {
+      "label": "แรงซื้อ-ขายต่างชาติสะสม (YTD)",
+      "value": null,
+      "unit": "พันล้านบาท",
+      "asOf": "ยังไม่ได้กรอก",
+      "sourceUrl": "https://www.set.or.th/th/market/statistics/investor-type",
+      "explainer": "เงินทุนต่างชาติไหลเข้า-ออกตลาดหุ้นไทย เป็นตัวชี้วัดที่ SET ผูกกับความเชื่อมั่นนักลงทุนต่างชาติสูงมาก ไหลเข้าแรงต่อเนื่อง = เสี่ยงต่อการไหลออกแรงเช่นกันเมื่อ sentiment เปลี่ยน",
+      "history": [],
+      "historyLabels": [],
+      "scaleMin": -50,
+      "scaleMid": 0,
+      "scaleMax": 50,
+      "riskScore": null,
+      "note": "ยังไม่มีข้อมูล — เข้า SET Market Statistics เลือก 'Investor Type' ดูยอดซื้อ-ขายสุทธินักลงทุนต่างชาติสะสมตั้งแต่ต้นปี แล้วกรอก value เอง"
+    },
+    "creditBalance": {
+      "label": "ยอดสินเชื่อเพื่อซื้อหลักทรัพย์ (Margin)",
+      "value": null,
+      "unit": "% YoY",
+      "asOf": "ยังไม่ได้กรอก",
+      "sourceUrl": "https://www.set.or.th/th/market/statistics/margin-loan",
+      "explainer": "เทียบเคียงกับ Margin Debt ของสหรัฐฯ วัดว่านักลงทุนไทยกู้เงินมาเล่นหุ้นเพิ่มขึ้นเร็วแค่ไหน",
+      "history": [],
+      "historyLabels": [],
+      "scaleMin": 0,
+      "scaleMid": 20,
+      "scaleMax": 50,
+      "riskScore": null,
+      "note": "ยังไม่มีข้อมูล — SET เผยแพร่ยอด Credit Balance รายเดือน หาในหมวด Market Statistics"
+    },
+    "retailShare": {
+      "label": "สัดส่วนมูลค่าซื้อขายนักลงทุนรายย่อย",
+      "value": null,
+      "unit": "%",
+      "asOf": "ยังไม่ได้กรอก",
+      "sourceUrl": "https://www.set.or.th/th/market/statistics/investor-type",
+      "explainer": "สัดส่วนการซื้อขายที่มาจากนักลงทุนรายย่อย (ไม่ใช่สถาบัน) ยิ่งสูงยิ่งสะท้อนว่าคนทั่วไปแห่เข้ามาเก็งกำไรมาก ซึ่งมักเกิดในช่วง Mania Phase",
+      "history": [],
+      "historyLabels": [],
+      "scaleMin": 30,
+      "scaleMid": 45,
+      "scaleMax": 65,
+      "riskScore": null,
+      "note": "ยังไม่มีข้อมูล — ดูสัดส่วนรายเดือนใน SET Market Statistics หมวด Investor Type"
+    }
+  },
+  "historicalComposite": [
+    { "date": "2013", "score": 62, "label": "ก่อนวิกฤต Taper Tantrum" },
+    { "date": "2015", "score": 40, "label": null },
+    { "date": "2018", "score": 55, "label": null },
+    { "date": "2020", "score": 25, "label": "COVID Crash" },
+    { "date": "2022", "score": 45, "label": null },
+    { "date": "2026", "score": 58, "label": "ปัจจุบัน (กรอกตัวชี้วัดที่เหลือเพื่อคำนวณให้แม่นขึ้น)" }
+  ]
+}

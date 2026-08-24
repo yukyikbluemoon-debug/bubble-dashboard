@@ -73,6 +73,46 @@ h1{
   font-size:14px; color: var(--calm);
 }
 
+.header-right{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+
+.market-switch{ display:flex; gap:4px; background:var(--panel); border:1px solid var(--panel-border); border-radius:4px; padding:3px; }
+.market-btn{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px; padding:6px 12px; border:none; border-radius:3px;
+  background:transparent; color:var(--muted); cursor:pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.market-btn:hover{ color: var(--text); }
+.market-btn.active{ background: var(--calm); color: #0B0F14; font-weight:600; }
+
+.stale-banner{
+  max-width: 980px; margin: 0 auto 20px;
+  background: rgba(232,163,61,0.12);
+  border: 1px solid var(--warn);
+  color: var(--warn);
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  padding: 10px 16px;
+  border-radius: 4px;
+}
+
+.guide-panel{
+  max-width: 980px; margin: 0 auto 20px;
+}
+.guide-toggle{
+  width:100%; text-align:left;
+  background: var(--panel); border:1px solid var(--panel-border);
+  color: var(--text); font-family:'Inter', sans-serif; font-size:13px;
+  padding: 12px 16px; border-radius:4px; cursor:pointer;
+}
+.guide-toggle:hover{ border-color: var(--calm); }
+.guide-content{
+  background: var(--panel); border:1px solid var(--panel-border); border-top:none;
+  border-radius: 0 0 4px 4px; padding: 16px; font-size: 13px; line-height:1.7; color: var(--muted);
+}
+.guide-content p{ margin-bottom:10px; }
+.guide-content code{ background:#0B0F14; padding:1px 5px; border-radius:3px; font-family:'IBM Plex Mono', monospace; color:var(--calm); }
+
 main{ max-width: 980px; margin: 0 auto; position:relative; z-index:1; }
 
 /* ---------- Gauge ---------- */
@@ -148,12 +188,23 @@ main{ max-width: 980px; margin: 0 auto; position:relative; z-index:1; }
 }
 .ind-card.risk-warn{ border-left-color: var(--warn); }
 .ind-card.risk-crit{ border-left-color: var(--crit); }
+.ind-card.risk-unknown{ border-left-color: var(--muted); opacity: 0.75; }
 
+.ind-label-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; }
 .ind-label{
   font-family:'IBM Plex Mono', monospace;
   font-size: 10px; letter-spacing:1px; color: var(--muted);
   text-transform:uppercase;
-  margin-bottom: 8px;
+}
+.ind-info-btn{
+  width:18px; height:18px; border-radius:50%;
+  background:transparent; border:1px solid var(--muted); color:var(--muted);
+  font-size:10px; line-height:1; cursor:pointer; flex-shrink:0;
+}
+.ind-info-btn:hover, .ind-info-btn.active{ border-color: var(--calm); color: var(--calm); }
+.ind-explainer{
+  font-size: 11.5px; color: var(--text); line-height:1.6;
+  background: rgba(63,167,150,0.08); border-radius:3px; padding:8px 10px; margin-bottom:8px;
 }
 .ind-value{
   font-family:'Space Grotesk', sans-serif;
@@ -164,14 +215,27 @@ main{ max-width: 980px; margin: 0 auto; position:relative; z-index:1; }
 .ind-note{
   font-size: 11.5px; color: var(--muted); line-height:1.5;
 }
+.ind-footer{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:8px;
+}
 .ind-risk{
   font-family:'IBM Plex Mono', monospace;
   font-size: 10px;
-  margin-top:8px;
   color: var(--calm);
 }
 .ind-card.risk-warn .ind-risk{ color: var(--warn); }
 .ind-card.risk-crit .ind-risk{ color: var(--crit); }
+.ind-card.risk-unknown .ind-risk{ color: var(--muted); }
+.ind-source{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--muted); text-decoration:none;
+}
+.ind-source:hover{ color: var(--calm); }
+.ind-asof{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 9px; color: var(--muted); margin-top:6px; opacity:0.7;
+}
 
 /* ---------- Timeline ---------- */
 .timeline-panel{
